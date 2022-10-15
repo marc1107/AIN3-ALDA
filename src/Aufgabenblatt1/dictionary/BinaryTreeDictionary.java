@@ -2,6 +2,8 @@
 // 22.09.2022
 package Aufgabenblatt1.dictionary;
 
+import java.util.Iterator;
+
 /**
  * Implementation of the Dictionary interface as AVL tree.
  * <p>
@@ -14,7 +16,7 @@ package Aufgabenblatt1.dictionary;
  * @param <V> Value.
  */
 public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> {
-    
+
     static private class Node<K, V> {
         K key;
         V value;
@@ -32,11 +34,36 @@ public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> {
             parent = null;
         }
     }
-    
+
     private Node<K, V> root = null;
     private int size = 0;
-    
+
     // ...
+
+    @Override
+    public V insert(K key, V value) {
+        return null;
+    }
+
+    @Override
+    public V search(K key) {
+        return null;
+    }
+
+    @Override
+    public V remove(K key) {
+        return null;
+    }
+
+    @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
+    public Iterator<Entry<K, V>> iterator() {
+        return null;
+    }
 
 	/**
 	 * Pretty prints the tree
