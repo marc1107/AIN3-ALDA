@@ -28,8 +28,8 @@ public class SortedArrayDictionary<K, V> implements Dictionary<K, V> {
 
     @Override
     public V insert(K key, V value) {
-        V v = this.search(key);
-        if (v == null) {
+        int search = binarySearch(key);
+        if (search == -1) {
             if (data[data.length - 1] != null) {
                 // Wenn data voll, dann um 10 vergrößern
                 Entry<K, V>[] tmp = new Entry[data.length + 10];
@@ -47,10 +47,8 @@ public class SortedArrayDictionary<K, V> implements Dictionary<K, V> {
             return null;
         }
 
-        for (int i = 0; i < size; i++) {
-            if (data[i].getKey().equals(key))
-                data[i].setValue(value);
-        }
+        V v = data[search].getValue();
+        data[search].setValue(value);
 
         return v;
     }
