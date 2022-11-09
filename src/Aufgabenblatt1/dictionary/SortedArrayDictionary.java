@@ -18,7 +18,7 @@ public class SortedArrayDictionary<K, V> implements Dictionary<K, V> {
             int m = (li + re) / 2;
             if (key.equals(data[m].getKey()))
                 return m;
-            else if (key.toString().compareTo(data[m].toString()) == -1) // Stimmt das so mit toString? key.compareTo geht nicht
+            else if (key.toString().compareTo(data[m].toString()) < 0) // Stimmt das so mit toString? key.compareTo geht nicht
                 re = m - 1;
             else
                 li = m + 1;
@@ -37,8 +37,8 @@ public class SortedArrayDictionary<K, V> implements Dictionary<K, V> {
                 data = tmp;
             }
             // An richtiger Stelle einfügen
-            int i = 0;
-            for (i = size - 1; (i >= 0 && data[i].toString().compareTo(key.toString()) == 1); i--)
+            int i;
+            for (i = size - 1; (i >= 0 && data[i].toString().compareTo(key.toString()) > 0); i--)
                 data[i + 1] = data[i];
 
             data[i + 1] = new Entry<>(key, value);
@@ -68,9 +68,10 @@ public class SortedArrayDictionary<K, V> implements Dictionary<K, V> {
         int search = binarySearch(key);
         if (search >= 0) {
             V v = data[search].getValue();
-            for (int i = search; i < size - 1; i++) {
-                data[i] = data[i + 1];
-            }
+
+            if (size - 1 - search >= 0)
+                System.arraycopy(data, search + 1, data, search, size - 1 - search);
+
             size--;
             return v;
         }

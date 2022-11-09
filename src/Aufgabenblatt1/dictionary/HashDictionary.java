@@ -38,7 +38,6 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
     }
 
     private int doubleSize() {
-        int currentSize = data.length;
         int newSize = data.length * 2;
         while (!isPrim(newSize)) {
             newSize++;
