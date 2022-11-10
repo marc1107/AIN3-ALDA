@@ -95,6 +95,7 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
                 if (entry.getKey().equals(key)) {
                     V v = entry.getValue();
                     data[h(key)].remove(entry);
+                    elements--;
                     return v;
                 }
             }
