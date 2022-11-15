@@ -2,7 +2,7 @@ package Aufgabenblatt1.dictionary;
 
 import java.util.Iterator;
 
-public class SortedArrayDictionary<K, V> implements Dictionary<K, V> {
+public class SortedArrayDictionary<K extends Comparable<? super K>, V> implements Dictionary<K, V> {
     private Entry<K, V>[] data;
     private int size = 0;
 
@@ -18,7 +18,7 @@ public class SortedArrayDictionary<K, V> implements Dictionary<K, V> {
             int m = (li + re) / 2;
             if (key.equals(data[m].getKey()))
                 return m;
-            else if (key.toString().compareTo(data[m].toString()) < 0) // Stimmt das so mit toString? key.compareTo geht nicht
+            else if (key.compareTo(data[m].getKey()) < 0) // Stimmt das so mit toString? key.compareTo geht nicht
                 re = m - 1;
             else
                 li = m + 1;
@@ -38,7 +38,7 @@ public class SortedArrayDictionary<K, V> implements Dictionary<K, V> {
             }
             // An richtiger Stelle einfügen
             int i;
-            for (i = size - 1; (i >= 0 && data[i].toString().compareTo(key.toString()) > 0); i--)
+            for (i = size - 1; (i >= 0 && data[i].getKey().compareTo(key) > 0); i--)
                 data[i + 1] = data[i];
 
             data[i + 1] = new Entry<>(key, value);
