@@ -57,8 +57,9 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
 
     private Node<K, V> insertR(K key, V value, Node<K, V> p) {
         if (p == null) {
-            p = new Node(key, value);
+            p = new Node<>(key, value);
             oldValue = null;
+            size++;
         } else if (key.compareTo(p.key) < 0) {
             p.left = insertR(key, value, p.left);
             if (p.left != null) {
@@ -109,11 +110,12 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
             oldValue = p.value;
             p = (p.left != null) ? p.left : p.right;
         } else {
-            MinEntry<K, V> min = new MinEntry<K, V>();
+            MinEntry<K, V> min = new MinEntry<>();
             p.right = getRemMinR(p.right, min);
             oldValue = p.value;
             p.key = min.key;
             p.value = min.value;
+            size--;
         }
         return p;
     }
@@ -129,6 +131,22 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
         }
         return p;
     }
+
+    /*private Node<K,V> leftMostDescendant(Node<K,V> p) {
+        assert p != null;
+        while(p.left != null) {
+            p = p.left;
+        }
+        return p;
+    }
+
+    private Node<K,V> parentOfLeftMostAncestor(Node<K,V> p) {
+        assert p != null;
+        while (p.parent != null && p.parent.right == p) {
+            p = p.parent;
+        }
+        return p.parent;
+    }*/
 
     @Override
     public int size() {
