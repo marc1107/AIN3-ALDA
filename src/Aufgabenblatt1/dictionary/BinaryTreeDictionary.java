@@ -256,6 +256,7 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
                     } else {
                         p = parentOfLeftMostAncestor(p);
                     }
+                    n++;
                     return new Entry<>(p.key, p.value);
                 } else {
                     return null;
