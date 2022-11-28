@@ -85,7 +85,15 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
         assert p.left != null;
         Node<K,V> q = p.left;
         p.left = q.right;
+
+        if (p.left != null)
+            p.left.parent = p;
+
         q.right = p;
+
+        if (q.right != null)
+            q.right.parent = q;
+
         p.height = Math.max(getHeight(p.left), getHeight(p.right)) +1;
         q.height = Math.max(getHeight(q.left), getHeight(q.right)) +1;
         return q;
@@ -95,7 +103,15 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
         assert p.right != null;
         Node<K,V> q = p.right;
         p.right = q.left;
+
+        if (p.right != null)
+            p.right.parent = p;
+
         q.left = p;
+
+        if (q.left != null)
+            q.left.parent = q;
+
         p.height = Math.max(getHeight(p.right), getHeight(p.left)) +1;
         q.height = Math.max(getHeight(q.right), getHeight(q.left)) +1;
         return q;
@@ -175,17 +191,12 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
             oldValue = null;
         } else if (key.compareTo(p.key) < 0) {
             p.left = removeR(key, p.left);
-            if (p.left != null) {
-                p.left.parent = p;
-            }
         } else if (key.compareTo(p.key) > 0) {
             p.right = removeR(key, p.right);
-            if (p.right != null) {
-                p.right.parent = p;
-            }
         } else if (p.left == null || p.right == null) {
             oldValue = p.value;
             p = (p.left != null) ? p.left : p.right;
+            size--;
         } else {
             MinEntry<K, V> min = new MinEntry<>();
             p.right = getRemMinR(p.right, min);
@@ -239,28 +250,19 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
             Node<K,V> p = null;
 
             @Override
-            public boolean hasNext() {
-                return n < size - 1;
-            }
+            public boolean hasNext() { return n < size - 1; }
 
             @Override
             public Entry<K, V> next() {
-                if (n < size) {
-                    if (n == 0 && root != null) {
-                        p = leftMostDescendant(root);
-                    }
-                }
-                if (p != null) {
-                    if (p.right != null) {
-                        p = leftMostDescendant(p.right);
-                    } else {
-                        p = parentOfLeftMostAncestor(p);
-                    }
-                    n++;
-                    return new Entry<>(p.key, p.value);
-                } else {
-                    return null;
-                }
+                if (p == null)
+                    p = leftMostDescendant(root);
+                else if (p.right != null)
+                    p = leftMostDescendant(p.right);
+                else
+                    p = parentOfLeftMostAncestor(p);
+
+                n++;
+                return new Entry<>(p.key, p.value);
             }
         };
     }
