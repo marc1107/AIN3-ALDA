@@ -130,8 +130,7 @@ public class TUI {
         int rueckgabeWert = chooser.showOpenDialog(null);
 
         /* Abfrage, ob auf "Öffnen" geklickt wurde */
-        if(rueckgabeWert == JFileChooser.APPROVE_OPTION)
-        {
+        if(rueckgabeWert == JFileChooser.APPROVE_OPTION) {
             try {
                 long startTime = System.nanoTime();
                 BufferedReader reader = new BufferedReader(new FileReader(chooser.getSelectedFile()));
