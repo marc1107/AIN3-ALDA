@@ -44,16 +44,12 @@ public class TUI {
                 break;
             case "s":
                 if (command.length >= 2) {
-                    long startTime = System.nanoTime();
                     String searchedValue = dictionary.search(command[1]);
                     if (searchedValue == null) {
                         System.out.println("Nicht gefunden");
                     } else {
                         System.out.println(dictionary.search(command[1]));
                     }
-                    long endTime = System.nanoTime();
-                    long timeTaken = (endTime - startTime);
-                    System.out.println("Dauer: " + timeTaken + "ns");
                 }
                 else
                     System.out.println("Eingabe im Format s deutsch");
@@ -85,6 +81,24 @@ public class TUI {
             case "exit":
                 System.out.println("Programm beendet");
                 System.exit(0);
+            case "searchAll":
+                long startTime = System.nanoTime();
+                for (Dictionary.Entry<String, String> e : dictionary) {
+                    parseCommand("search " + e.getKey());
+                }
+                long endTime = System.nanoTime();
+                long timeTaken = (endTime - startTime) / 1000000;
+                System.out.println("Dauer: " + timeTaken + "ms");
+                break;
+            case "searchAllE":
+                long startTTime = System.nanoTime();
+                for (Dictionary.Entry<String, String> e : dictionary) {
+                    parseCommand("search " + e.getValue());
+                }
+                long endTTime = System.nanoTime();
+                long timeTTaken = (endTTime - startTTime) / 1000000;
+                System.out.println("Dauer: " + timeTTaken + "ms");
+                break;
         }
     }
 
