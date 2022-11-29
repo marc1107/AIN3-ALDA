@@ -84,7 +84,7 @@ public class TUI {
             case "searchAll":
                 long startTime = System.nanoTime();
                 for (Dictionary.Entry<String, String> e : dictionary) {
-                    parseCommand("search " + e.getKey());
+                    parseCommand("s " + e.getKey());
                 }
                 long endTime = System.nanoTime();
                 long timeTaken = (endTime - startTime) / 1000000;
