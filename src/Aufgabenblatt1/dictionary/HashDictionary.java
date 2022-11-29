@@ -17,6 +17,10 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
         data = new LinkedList[m];
     }
 
+    public String toString() {
+        return elements + "; " + data.length;
+    }
+
     private boolean isPrim(int n) {
         if (n == 2 || n == 3)
             return true;
@@ -30,11 +34,11 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
     }
 
     private void raiseArraySizeAndMoveEntries() {
-        LinkedList<Entry<K, V>>[] newArray = new LinkedList[doubleSize()];
+        HashDictionary<K,V> temp = new HashDictionary<>(doubleSize());
         for (Entry<K, V> e: this) {
-            newArray[h(e.getKey())].add(e);
+            temp.insert(e.getKey(), e.getValue());
         }
-        data = newArray;
+        data = temp.data;
     }
 
     private int doubleSize() {
@@ -64,8 +68,6 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
                 if (entry.getKey().equals(key)) {
                     V v = entry.getValue();
                     entry.setValue(value);
-                    if (data[h(key)].size() > loadFactor)
-                        raiseArraySizeAndMoveEntries();
                     return v;
                 }
             }
@@ -74,6 +76,8 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
         }
         data[h(key)].add(new Entry<>(key, value));
         elements++;
+        if (elements > loadFactor * data.length)
+            raiseArraySizeAndMoveEntries();
         return null;
     }
 

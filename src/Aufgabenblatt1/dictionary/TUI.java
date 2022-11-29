@@ -161,6 +161,7 @@ public class TUI {
                     long timeTaken = (endTime - startTime) / 1000000;
                     System.out.println("Datei eingelesen; Dauer: " + timeTaken + "ms");
                 }
+                System.out.println(dictionary);
             } catch (FileNotFoundException fe) {
                 System.out.println("File not found");
             } catch (IOException e) {
