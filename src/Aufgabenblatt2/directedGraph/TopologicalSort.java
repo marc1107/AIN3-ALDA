@@ -3,9 +3,7 @@
 
 package Aufgabenblatt2.directedGraph;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Klasse zur Erstellung einer topologischen Sortierung.
@@ -22,8 +20,37 @@ public class TopologicalSort<V> {
 	 * @param g gerichteter Graph.
 	 */
 	public TopologicalSort(DirectedGraph<V> g) {
-        // ...
+		topSort(g);
     }
+
+	private List<V> topSort(DirectedGraph<V> g) {
+		Map<V, Integer> inDegree = new TreeMap<>();
+		Queue<V> q = new LinkedList<>();
+
+		int i = 0;
+		for (var v : g.getVertexSet()) {
+			inDegree.put(v, g.getInDegree(v));
+			if (inDegree.get(v) == 0) {
+				q.add(v);
+			}
+		}
+
+		while (!q.isEmpty()) {
+			var v = q.remove();
+			ts.add(v);
+			for (var w : g.getSuccessorVertexSet(v)) {
+				inDegree.put(w, inDegree.get(w) - 1);
+				if (inDegree.get(w) == 0) {
+					q.add(w);
+				}
+			}
+		}
+
+		if (ts.size() != g.getNumberOfVertexes())
+			return null;
+		else
+			return ts;
+	}
     
 	/**
 	 * Liefert eine nicht modifizierbare Liste (unmodifiable view) zurück,
