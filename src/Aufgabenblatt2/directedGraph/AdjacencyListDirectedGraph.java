@@ -32,43 +32,71 @@ public class AdjacencyListDirectedGraph<V> implements DirectedGraph<V> {
 
 	@Override
 	public boolean addVertex(V v) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		if (!containsVertex(v)) {
+			succ.put(v, new TreeMap<>());
+			pred.put(v, new TreeMap<>());
+			return true;
+		}
+		return false;
     }
 
     @Override
     public boolean addEdge(V v, V w, double weight) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		// Beide Knoten hinzufügen (wenn schon vorhanden wird in addVertex() nichts verändert)
+		addVertex(v);
+		addVertex(w);
+		boolean ret = true;
+		if (containsEdge(v, w)) {
+			ret = false;
+		}
+		succ.get(v).put(w, weight);
+		pred.get(w).put(v, weight);
+		numberEdge++;
+		return ret;
     }
 
     @Override
     public boolean addEdge(V v, V w) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		// Beide Knoten hinzufügen (wenn schon vorhanden wird in addVertex() nichts verändert)
+		addVertex(v);
+		addVertex(w);
+		boolean ret = true;
+		if (containsEdge(v, w)) {
+			return false;
+		}
+		succ.get(v).put(w, 1.0);
+		pred.get(w).put(v, 1.0);
+		numberEdge++;
+		return ret;
     }
 
     @Override
     public boolean containsVertex(V v) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+		return succ.get(v) != null;
+	}
 
     @Override
     public boolean containsEdge(V v, V w) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return containsVertex(v) && succ.get(v).get(w) != null;
     }
 
     @Override
     public double getWeight(V v, V w) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		if (containsEdge(v, w)) {
+			return succ.get(v).get(w);
+		} else {
+			throw new IllegalArgumentException("Kante nicht vorhanden");
+		}
     }
-
 	
     @Override
     public int getInDegree(V v) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return pred.get(v).size();
     }
 
     @Override
     public int getOutDegree(V v) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return succ.get(v).size();
     }
 	
 	@Override
@@ -78,34 +106,53 @@ public class AdjacencyListDirectedGraph<V> implements DirectedGraph<V> {
 
     @Override
     public Set<V> getPredecessorVertexSet(V v) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return Collections.unmodifiableSet(pred.get(v).keySet());
     }
 
     @Override
     public Set<V> getSuccessorVertexSet(V v) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+		return Collections.unmodifiableSet(succ.get(v).keySet());
+	}
 
     @Override
     public int getNumberOfVertexes() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return succ.size();
     }
 
     @Override
     public int getNumberOfEdges() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return numberEdge;
     }
 	
 	@Override
     public 
 	DirectedGraph<V> invert() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		AdjacencyListDirectedGraph<V> ad = new AdjacencyListDirectedGraph<>();
+
+		// Vorgänger durchiterieren und in dieser Reihenfolge als Kanten adden
+		for (var v : pred.entrySet())
+		{
+			for (var w : v.getValue().entrySet())
+			{
+				ad.addEdge(v.getKey(), w.getKey(), w.getValue());
+			}
+		}
+
+		return ad;
 	}
 
 	
 	@Override
 	public String toString() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		String s = "";
+
+		for (var v : succ.entrySet()) {
+			for (var w : v.getValue().entrySet()) {
+				s = s + v.getKey() + " --> " + w.getKey() + " weight = " + w.getValue() + "\n";
+			}
+		}
+
+		return s;
 	}
 	
 	
