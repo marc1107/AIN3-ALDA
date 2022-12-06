@@ -5,10 +5,7 @@ package Aufgabenblatt2.directedGraph;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Klasse für Bestimmung aller strengen Komponenten.
@@ -27,6 +24,7 @@ public class StrongComponents<V> {
     // Component 3: 4,
 
 	private final Map<Integer,Set<V>> comp = new TreeMap<>();
+	private int index = 0;
 	
 	/**
 	 * Ermittelt alle strengen Komponenten mit
@@ -34,7 +32,48 @@ public class StrongComponents<V> {
 	 * @param g gerichteter Graph.
 	 */
 	public StrongComponents(DirectedGraph<V> g) {
-		// ...
+		kosaraju(g);
+	}
+
+	private void kosaraju(DirectedGraph<V> g) {
+		DepthFirstOrder<V> dfo = new DepthFirstOrder<>(g);
+		// a.
+		List<V> postOrder = dfo.postOrder();
+		List<V> postOrderInverted = new LinkedList<>();
+
+		// postOrder invertieren
+		for (int i = postOrder.size() - 1; i >= 0; i--) {
+			postOrderInverted.add(postOrder.get(i));
+		}
+
+		// b.
+		DirectedGraph<V> gi = g.invert();
+
+		// c.
+		DepthFirstOrder<V> dfoi = new DepthFirstOrder<>(gi);
+
+		Set<V> besucht = new TreeSet<>();
+		for (V v : postOrderInverted)
+		{
+			if (!besucht.contains(v))
+			{
+				this.comp.put(index, new TreeSet<V>());
+				visitDF(v, gi, besucht);
+				index++;
+			}
+		}
+	}
+
+	private void visitDF(V v, DirectedGraph<V> g, Set<V> besucht)
+	{
+		besucht.add(v);
+		this.comp.get(index).add(v);
+
+		for (var w : g.getSuccessorVertexSet(v))
+		{
+			if (!besucht.contains(w))
+				visitDF(w, g, besucht);
+		}
 	}
 	
 	/**
@@ -47,7 +86,17 @@ public class StrongComponents<V> {
 
 	@Override
 	public String toString() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		StringBuilder s = new StringBuilder();
+
+		for(var v : comp.entrySet()) {
+			s.append("Component ").append(v.getKey()).append(":");
+			for(var w : v.getValue()) {
+				s.append(" ").append(w).append(",");
+			}
+			s.append("\n");
+		}
+
+		return s.toString();
 	}
 	
 	/**
