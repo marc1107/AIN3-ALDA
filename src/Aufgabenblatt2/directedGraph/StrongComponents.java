@@ -50,8 +50,6 @@ public class StrongComponents<V> {
 		DirectedGraph<V> gi = g.invert();
 
 		// c.
-		DepthFirstOrder<V> dfoi = new DepthFirstOrder<>(gi);
-
 		Set<V> besucht = new TreeSet<>();
 		for (V v : postOrderInverted)
 		{
