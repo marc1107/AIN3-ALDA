@@ -51,23 +51,14 @@ public class AdjacencyListDirectedGraph<V> implements DirectedGraph<V> {
 		}
 		succ.get(v).put(w, weight);
 		pred.get(w).put(v, weight);
-		numberEdge++;
+		if (ret)
+			numberEdge++;
 		return ret;
     }
 
     @Override
     public boolean addEdge(V v, V w) {
-		// Beide Knoten hinzufügen (wenn schon vorhanden wird in addVertex() nichts verändert)
-		addVertex(v);
-		addVertex(w);
-		boolean ret = true;
-		if (containsEdge(v, w)) {
-			return false;
-		}
-		succ.get(v).put(w, 1.0);
-		pred.get(w).put(v, 1.0);
-		numberEdge++;
-		return ret;
+		return addEdge(v, w, 1);
     }
 
     @Override
