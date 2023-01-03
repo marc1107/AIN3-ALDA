@@ -1,4 +1,4 @@
-package shortestPath;
+package Aufgabenblatt3;
 
 import java.util.Arrays;
 import java.util.Comparator;

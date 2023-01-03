@@ -1,6 +1,6 @@
-package shortestPath;
+package Aufgabenblatt3;
 
-import directedGraph.*;
+import Aufgabenblatt2.directedGraph.*;
 import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.TreeMap;

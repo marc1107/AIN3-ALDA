@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package shortestPath;
+package Aufgabenblatt3;
 
 /**
  * @author Oliver Bittel

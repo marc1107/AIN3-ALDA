@@ -1,9 +1,9 @@
 // O. Bittel;
 // 26.09.2022
 
-package shortestPath;
+package Aufgabenblatt3;
 
-import directedGraph.*;
+import Aufgabenblatt2.directedGraph.*;
 import sim.SYSimulation;
 import java.util.Map;
 import java.util.HashMap;
