@@ -5,9 +5,8 @@ package Aufgabenblatt3;
 
 import Aufgabenblatt2.directedGraph.*;
 import sim.SYSimulation;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
+
+import java.util.*;
 
 // ...
 
@@ -24,7 +23,12 @@ public class ShortestPath<V> {
 	Map<V,Double> dist; 		// Distanz für jeden Knoten
 	Map<V,V> pred; 				// Vorgänger für jeden Knoten
 	IndexMinPQ<V,Double> cand; 	// Kandidaten als PriorityQueue PQ
-	// ...
+
+	Heuristic<V> h;
+	DirectedGraph<V> dg;
+
+	V s;
+	V g;
 
 	/**
 	 * Konstruiert ein Objekt, das im Graph g k&uuml;rzeste Wege 
@@ -40,7 +44,8 @@ public class ShortestPath<V> {
 		dist = new HashMap<>();
 		pred = new HashMap<>();
 		cand = new IndexMinPQ<>();
-		// ...
+		this.dg = g;
+		this.h = h;
 	}
 
 	/**
@@ -68,7 +73,50 @@ public class ShortestPath<V> {
 	 * @param g Zielknoten
 	 */
 	public void searchShortestPath(V s, V g) {
-		// ...
+		this.s = s;
+		this.g = g;
+
+		for(V v: dg.getVertexSet()) {
+			this.dist.put(v, Double.MAX_VALUE);
+			this.pred.put(v, null);
+		}
+		this.dist.put(s, 0.0);
+		if (h == null)
+			cand.add(s, 0.0);
+		else
+			cand.add(s, 0 + h.estimatedCost(s, g));
+
+		while(!cand.isEmpty()) {
+			V v = cand.removeMin();
+			printNode(v);
+
+			// A*- Algorithmus Prüfung
+			if (h != null && v == g) { return; }
+
+			for(var w: dg.getSuccessorVertexSet(v)) {
+				if(dist.get(w) == Double.MAX_VALUE) {
+					pred.put(w, v);
+					dist.put(w, dist.get(v) + dg.getWeight(v, w));
+					if (h == null)
+						cand.add(w, dist.get(w));
+					else
+						cand.add(w, dist.get(w) + h.estimatedCost(w, g));
+				} else if (dist.get(v) + dg.getWeight(v, w) < dist.get(w)) {
+					pred.put(w, v);
+					dist.put(w, dist.get(v) + dg.getWeight(v, w));
+					if (h == null)
+						cand.change(w, dist.get(w));
+					else
+						cand.change(w, dist.get(w) + h.estimatedCost(w, g));
+				}
+			}
+		}
+	}
+
+	private void printNode(V v) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Besuche Knoten ").append(v).append(" mit d = ").append(dist.get(v));
+		System.out.println(sb);
 	}
 
 	/**
@@ -78,8 +126,17 @@ public class ShortestPath<V> {
 	 * @return kürzester Weg als Liste von Knoten.
 	 */
 	public List<V> getShortestPath() {
-		// ...
-		return null;
+		LinkedList<V> list = new LinkedList<>();
+		list.add(g);
+		V v = pred.get(g);
+		if (v == null)
+			throw new IllegalArgumentException();
+		while (v != null) {
+			list.add(v);
+			v = pred.get(v);
+		}
+		Collections.reverse(list);
+		return list;
 	}
 
 	/**
@@ -89,8 +146,7 @@ public class ShortestPath<V> {
 	 * @return Länge eines kürzesten Weges.
 	 */
 	public double getDistance() {
-		// ...
-		return 0.0;
+		return dist.get(g);
 	}
 
 }
