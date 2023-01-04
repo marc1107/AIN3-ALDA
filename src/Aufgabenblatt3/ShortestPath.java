@@ -89,16 +89,16 @@ public class ShortestPath<V> {
 			cand.add(s, 0.0 + h.estimatedCost(s, g));
 
 		while(!cand.isEmpty()) {
+			//V v = cand.removeMin();
 			V v = cand.getMinKey(); // cand.removeMin() macht irgendwie keinen richtigen remove... warum?
 			cand.remove(v);
 
+			printNode(v);
+
 			// A*- Algorithmus Prüfung
 			if (h != null && v.equals(g)) {
-				printNode(v);
 				return;
 			}
-
-			printNode(v);
 
 			for(var w: dg.getSuccessorVertexSet(v)) {
 				if(dist.get(w) == Double.MAX_VALUE) {
