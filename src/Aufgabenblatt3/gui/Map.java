@@ -1,4 +1,4 @@
-package gui;
+package Aufgabenblatt3.gui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -25,7 +25,7 @@ public class Map extends JPanel {
 		size = new Dimension();
 		
 		// create a buffered image and copy image data from file to buffer
-		bimage = ImageIO.read(new File(this.getClass().getResource("london.jpg").getPath()));
+		bimage = ImageIO.read(new File(this.getClass().getResource("london.jpg").getPath().replaceAll("%20", " ")));
 		g2d = bimage.createGraphics();
 		size.width = bimage.getWidth(null);
 		size.height = bimage.getHeight(null);
@@ -63,7 +63,7 @@ public class Map extends JPanel {
 	
 	public void clearMap() throws IOException {
 		g2d.dispose();
-		bimage = ImageIO.read(new File(this.getClass().getResource("london.jpg").getPath()));
+		bimage = ImageIO.read(new File(this.getClass().getResource("london.jpg").getPath().replaceAll("%20", " ")));
 		g2d = bimage.createGraphics();
 		repaint();
 	}

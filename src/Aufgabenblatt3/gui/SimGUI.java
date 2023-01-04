@@ -1,6 +1,6 @@
-package gui;
+package Aufgabenblatt3.gui;
 
-import gui.Toolbar.ToolbarState;
+import Aufgabenblatt3.gui.Toolbar.ToolbarState;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -44,7 +44,7 @@ public class SimGUI extends JFrame implements Runnable,ActionListener,ChangeList
 	
 	public SimGUI() throws IOException {
 		stations = new TreeMap<Integer, Station>();
-		readStationsFromFile(this.getClass().getResource("stations.txt").getPath());
+		readStationsFromFile(this.getClass().getResource("stations.txt").getPath().replaceAll("%20", " "));
 		mapEntries = new Vector<MapEntry>();
 		mapEntriesReplay = new Vector<MapEntry>();
 		lock = new Object();

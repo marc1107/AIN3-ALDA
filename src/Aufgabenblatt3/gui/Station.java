@@ -1,4 +1,4 @@
-package gui;
+package Aufgabenblatt3.gui;
 
 import java.awt.Color;
 import java.awt.Point;

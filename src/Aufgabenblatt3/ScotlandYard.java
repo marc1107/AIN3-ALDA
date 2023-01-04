@@ -2,15 +2,12 @@ package Aufgabenblatt3;
 
 import Aufgabenblatt2.directedGraph.*;
 import java.io.FileNotFoundException;
-import sim.SYSimulation;
+import Aufgabenblatt3.sim.SYSimulation;
 import java.awt.Color;
 import java.io.IOException;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 
 /**
@@ -36,9 +33,35 @@ public class ScotlandYard {
 	public static DirectedGraph<Integer> getGraph() throws FileNotFoundException {
 
 		DirectedGraph<Integer> sy_graph = new AdjacencyListDirectedGraph<>();
-		Scanner in = new Scanner(new File("ScotlandYard_Kanten.txt"));
+		Scanner in = new Scanner(new File("src/Aufgabenblatt3/ScotlandYard_Kanten.txt"));
 
-		// ...
+		while(in.hasNextLine()) {
+			int v = in.nextInt();
+			int w = in.nextInt();
+			String verb = in.next();
+			double weight = 0.0;
+			if (verb.equals("UBahn")) {
+				// nur wenn Kante nicht vorhanden, ansonsten ist es nicht die kürzeste Distanz
+				if (!sy_graph.containsEdge(v, w))
+					weight = 5.0;
+				else
+					continue;
+			}
+			else if (verb.equals("Taxi")) {
+				weight = 2.0;
+			}
+			else if (verb.equals("Bus")) {
+				// same wie bei U-Bahn (nur angepasst)
+				if (sy_graph.containsEdge(v, w)) {
+					if (sy_graph.getWeight(v, w) <= 3.0)
+						continue;
+				}
+				weight = 3.0;
+			}
+			sy_graph.addEdge(v, w, weight);
+			sy_graph.addEdge(w, v, weight);
+		}
+		in.close();
 		
 		// Test, ob alle Kanten eingelesen wurden: 
 		System.out.println("Number of Vertices:       " + sy_graph.getNumberOfVertexes());	// 199
@@ -78,10 +101,10 @@ public class ScotlandYard {
 
 		DirectedGraph<Integer> syGraph = getGraph();
 		
-		Heuristic<Integer> syHeuristic = null; // Dijkstra
-		//Heuristic<Integer> syHeuristic = getHeuristic(); // A*
+		//Heuristic<Integer> syHeuristic = null; // Dijkstra
+		Heuristic<Integer> syHeuristic = getHeuristic(); // A*
 
-		ShortestPath<Integer> sySp = new ShortestPath<Integer>(syGraph,syHeuristic);
+		ShortestPath<Integer> sySp = new ShortestPath<Integer>(syGraph, syHeuristic);
 
 		sySp.searchShortestPath(65,157);
 		System.out.println("Distance = " + sySp.getDistance()); // 9.0
@@ -141,12 +164,23 @@ class ScotlandYardHeuristic implements Heuristic<Integer> {
 	}
 
 	public ScotlandYardHeuristic() throws FileNotFoundException {
-		// ...
+		this.coord = new TreeMap<>();
+
+		Scanner in = new Scanner(new File("src/Aufgabenblatt3/ScotlandYard_Knoten.txt"));
+		while (in.hasNextLine())
+		{
+			int x = in.nextInt();
+			int y = in.nextInt();
+			int z = in.nextInt();
+			coord.put(x, new Point(y, z));
+		}
+		in.close();
 	}
 
 	public double estimatedCost(Integer u, Integer v) {
-		// ...
-		return 0.0;
+		Point p = coord.get(u);
+		Point q = coord.get(v);
+		return Math.sqrt(Math.pow(q.x - p.x, 2) + Math.pow(q.y - p.y, 2)) / 30; // Formel euklidischer Abstand / 30
 	}
 }
 

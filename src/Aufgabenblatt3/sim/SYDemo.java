@@ -1,6 +1,5 @@
-package sim;
+package Aufgabenblatt3.sim;
 
-import sim.SYSimulation;
 import java.awt.Color;
 import java.io.IOException;
 

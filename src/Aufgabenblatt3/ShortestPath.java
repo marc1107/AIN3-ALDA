@@ -4,9 +4,11 @@
 package Aufgabenblatt3;
 
 import Aufgabenblatt2.directedGraph.*;
-import sim.SYSimulation;
+import Aufgabenblatt3.sim.SYSimulation;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 // ...
 
@@ -77,21 +79,26 @@ public class ShortestPath<V> {
 		this.g = g;
 
 		for(V v: dg.getVertexSet()) {
-			this.dist.put(v, Double.MAX_VALUE);
-			this.pred.put(v, null);
+			dist.put(v, Double.MAX_VALUE);
+			pred.put(v, null);
 		}
-		this.dist.put(s, 0.0);
+		dist.put(s, 0.0);
 		if (h == null)
 			cand.add(s, 0.0);
 		else
-			cand.add(s, 0 + h.estimatedCost(s, g));
+			cand.add(s, 0.0 + h.estimatedCost(s, g));
 
 		while(!cand.isEmpty()) {
-			V v = cand.removeMin();
-			printNode(v);
+			V v = cand.getMinKey(); // cand.removeMin() macht irgendwie keinen richtigen remove... warum?
+			cand.remove(v);
 
 			// A*- Algorithmus Prüfung
-			if (h != null && v == g) { return; }
+			if (h != null && v.equals(g)) {
+				printNode(v);
+				return;
+			}
+
+			printNode(v);
 
 			for(var w: dg.getSuccessorVertexSet(v)) {
 				if(dist.get(w) == Double.MAX_VALUE) {
@@ -117,6 +124,8 @@ public class ShortestPath<V> {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Besuche Knoten ").append(v).append(" mit d = ").append(dist.get(v));
 		System.out.println(sb);
+		if (sim != null)
+			sim.visitStation((Integer) v, Color.BLUE);
 	}
 
 	/**
@@ -146,6 +155,8 @@ public class ShortestPath<V> {
 	 * @return Länge eines kürzesten Weges.
 	 */
 	public double getDistance() {
+		if (pred.get(g) == null)
+			throw new IllegalArgumentException();
 		return dist.get(g);
 	}
 
