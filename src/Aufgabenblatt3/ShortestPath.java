@@ -96,7 +96,7 @@ public class ShortestPath<V> {
 			printNode(v);
 
 			// A*- Algorithmus Prüfung
-			if (h != null && v.equals(g)) {
+			if (/*h != null && */v.equals(g)) {
 				cand.clear(); // ansonsten ist beim nächsten Methodenaufruf cand noch gefüllt und alles kaputt
 				return;
 			}
